@@ -32,11 +32,13 @@ func LookupRoute(db db.Queryable, route string) (*structs.Route, error) {
 		&routeRow.ID,
 		&routeRow.Route,
 		&routeRow.Destination,
+		&routeRow.Active,
+		&routeRow.CreatedBy,
+		&routeRow.CreatedAt,
 	)
 	if err != nil {
 		return nil, fmt.Errorf("error executing query: %w", err)
 	}
-
 
 	return &routeRow, nil
 }
