@@ -34,7 +34,6 @@ func main() {
 	// Track & Update Last Active
 	r.Use(middleware.TokenHandlers)
 
-	// r.Handle("/check/{route}", middleware.AccessTokenMiddleware(http.HandlerFunc(routers.CheckLinkRouteHandler))).Methods(http.MethodGet)
 	r.HandleFunc("/check/{route}", routers.CheckLinkRouteHandler).Methods(http.MethodGet)
 
 	// Launch API Listener
