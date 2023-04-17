@@ -68,7 +68,7 @@
     }
   ],
   "placementConstraints": [],
-  "memory": 32,
+  "memory": "32",
   "taskRoleArn": "arn:aws:iam::605737100658:role/HillviewTVAPIECSTaskExecutionRole",
   "compatibilities": ["EXTERNAL", "EC2"],
   "taskDefinitionArn": "arn:aws:ecs:us-west-1:605737100658:task-definition/hillviewtv-links-service:1",
