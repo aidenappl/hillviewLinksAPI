@@ -12,7 +12,8 @@ func LookupRoute(db db.Queryable, route string) (*structs.Route, error) {
 
 	q := sq.Select("links.*").
 		From("links").
-		Where("links.route = ?", route)
+		Where("links.route = ?", route).
+		Where("links.active = ?", true)
 
 	query, args, err := q.ToSql()
 	if err != nil {
@@ -21,6 +22,9 @@ func LookupRoute(db db.Queryable, route string) (*structs.Route, error) {
 
 	var routeRow structs.Route
 	rows, err := db.Query(query, args...)
+	if err != nil {
+		return nil, fmt.Errorf("error executing query: %w", err)
+	}
 
 	defer rows.Close()
 
