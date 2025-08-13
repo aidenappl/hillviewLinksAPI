@@ -7,12 +7,20 @@ import (
 
 	"github.com/gorilla/handlers"
 	"github.com/gorilla/mux"
+	"github.com/hillview.tv/linksAPI/db"
 	"github.com/hillview.tv/linksAPI/env"
 	"github.com/hillview.tv/linksAPI/middleware"
 	"github.com/hillview.tv/linksAPI/routers"
 )
 
 func main() {
+	// Ping DB
+	if err := db.PingDB(); err != nil {
+		log.Fatalf("❌ Failed to connect to the database: %v", err)
+	} else {
+		log.Println("✅ Connected to the database successfully")
+	}
+
 	primary := mux.NewRouter()
 
 	// Healthcheck Endpoint

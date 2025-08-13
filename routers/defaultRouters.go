@@ -1,12 +1,12 @@
 package routers
 
 import (
-	"encoding/json"
 	"net/http"
 
 	"github.com/gorilla/mux"
 	"github.com/hillview.tv/linksAPI/db"
 	"github.com/hillview.tv/linksAPI/query"
+	"github.com/hillview.tv/linksAPI/responder"
 )
 
 func CheckLinkRouteHandler(w http.ResponseWriter, r *http.Request) {
@@ -17,18 +17,18 @@ func CheckLinkRouteHandler(w http.ResponseWriter, r *http.Request) {
 	recordClick := r.URL.Query().Get("recordClick")
 
 	if len(route) == 0 {
-		http.Error(w, "missing route param", http.StatusBadRequest)
+		responder.ErrMissingBodyRequirement(w, "route")
 		return
 	}
 
 	routeFound, err := query.LookupRoute(db.DB, route)
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+		responder.ErrInternal(w, err, "failed to lookup route")
 		return
 	}
 
 	if routeFound == nil {
-		json.NewEncoder(w).Encode(routeFound)
+		w.WriteHeader(http.StatusNotFound)
 		return
 	}
 
@@ -37,10 +37,10 @@ func CheckLinkRouteHandler(w http.ResponseWriter, r *http.Request) {
 			LinkID: &routeFound.ID,
 		})
 		if err != nil {
-			http.Error(w, "failed to record click: "+err.Error(), http.StatusInternalServerError)
+			responder.ErrInternal(w, err, "failed to record click")
 			return
 		}
 	}
 
-	json.NewEncoder(w).Encode(routeFound)
+	responder.New(w, routeFound, "successfully found route")
 }
