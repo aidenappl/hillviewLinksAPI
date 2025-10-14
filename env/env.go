@@ -6,9 +6,10 @@ import (
 )
 
 var (
-	Port          = getEnv("PORT", "8000")
-	DatabaseDSN   = getEnvOrPanic("DATABASE_DSN")
-	JWTSigningKey = getEnvOrPanic("JWT_SIGNING_KEY")
+	Port           = getEnv("PORT", "8000")
+	DatabaseDSN    = getEnvOrPanic("DATABASE_DSN")
+	JWTSigningKey  = getEnvOrPanic("JWT_SIGNING_KEY")
+	HealthCheckURL = getEnvOrPanic("HEALTH_CHECK_URL")
 )
 
 func getEnv(key string, fallback string) string {

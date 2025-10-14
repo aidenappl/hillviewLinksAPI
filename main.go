@@ -1,12 +1,14 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	"log"
 	"net/http"
 
 	"github.com/gorilla/handlers"
 	"github.com/gorilla/mux"
+	"github.com/hillview.tv/linksAPI/background"
 	"github.com/hillview.tv/linksAPI/db"
 	"github.com/hillview.tv/linksAPI/env"
 	"github.com/hillview.tv/linksAPI/middleware"
@@ -23,8 +25,11 @@ func main() {
 
 	primary := mux.NewRouter()
 
-	// Healthcheck Endpoint
+	// Add context
+	ctx, cancel := context.WithCancel(context.Background())
+	defer cancel()
 
+	// Healthcheck Endpoint
 	primary.HandleFunc("/healthcheck", func(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusOK)
 	}).Methods(http.MethodGet)
@@ -46,6 +51,9 @@ func main() {
 
 	// Launch API Listener
 	fmt.Printf("✅ Hillview Links API running on port %s\n", env.Port)
+
+	// Add the health check polling
+	go background.StartHealthCheckPolling(ctx)
 
 	headersOk := handlers.AllowedHeaders([]string{"X-Requested-With", "Content-Type", "Origin", "Authorization", "Accept", "X-CSRF-Token"})
 	originsOk := handlers.AllowedOrigins([]string{"*"})
