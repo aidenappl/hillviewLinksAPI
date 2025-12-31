@@ -9,7 +9,7 @@ import (
 
 	"github.com/hillview.tv/linksAPI/env"
 
-	jwt "github.com/dgrijalva/jwt-go"
+	jwt "github.com/golang-jwt/jwt/v4"
 	"github.com/google/uuid"
 )
 
@@ -66,32 +66,6 @@ func ValidJWT(ctx context.Context, rawToken string, c *HVJwtClaims, reqClaims *H
 			return false, ValidTokenResponse{InvalidIssuer: true}, nil
 		}
 	}
-
-	// TODO - check if the token is expired or revoked
-
-	// redisClient, err := db.NewRedisClient()
-	// if err != nil {
-	// 	return false, ValidTokenResponse{Err: true}, fmt.Errorf("error creating redis client: %w", err)
-	// }
-	// rts, err := db.GetTokenRevocation(redisClient, rawToken)
-	// if err != nil {
-	// 	return false, ValidTokenResponse{Err: true}, fmt.Errorf("error getting user %d's token revocation time: %w", userID, err)
-	// }
-	// redisClient.Close()
-
-	// if rts == nil {
-	// 	return true, ValidTokenResponse{}, nil
-	// }
-
-	// rt, err := strconv.ParseInt(*rts, 10, 64)
-	// if err != nil {
-	// 	return false, ValidTokenResponse{Err: true}, fmt.Errorf("error converting token revocation time to int64: %w", err)
-	// }
-
-	// if rt > c.IssuedAt {
-	// 	// token has been revoked
-	// 	return false, ValidTokenResponse{Revoked: true}, nil
-	// }
 
 	return true, ValidTokenResponse{}, nil
 }
