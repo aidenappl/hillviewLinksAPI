@@ -108,6 +108,7 @@ func FindUser(db db.Queryable, req FindUserRequest) (*structs.User, error) {
 		"users.email",
 		"users.profile_image_url",
 		"users.inserted_at",
+		"users.updated_at",
 
 		"user_types.id",
 		"user_types.name",
@@ -158,6 +159,7 @@ func FindUser(db db.Queryable, req FindUserRequest) (*structs.User, error) {
 		&user.Email,
 		&user.ProfileImageURL,
 		&user.InsertedAt,
+		&user.UpdatedAt,
 
 		&status.ID,
 		&status.Name,
@@ -193,6 +195,7 @@ func ListAdminUsers(db db.Queryable, req ListAdminUsersRequest) ([]*structs.User
 		"users.email",
 		"users.profile_image_url",
 		"users.inserted_at",
+		"users.updated_at",
 
 		"user_types.id",
 		"user_types.name",
@@ -226,6 +229,7 @@ func ListAdminUsers(db db.Queryable, req ListAdminUsersRequest) ([]*structs.User
 			&user.Email,
 			&user.ProfileImageURL,
 			&user.InsertedAt,
+			&user.UpdatedAt,
 
 			&status.ID,
 			&status.Name,

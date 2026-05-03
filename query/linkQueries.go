@@ -10,7 +10,15 @@ import (
 
 func LookupRoute(db db.Queryable, route string) (*structs.Route, error) {
 
-	q := sq.Select("links.*").
+	q := sq.Select(
+		"links.id",
+		"links.route",
+		"links.destination",
+		"links.active",
+		"links.created_by",
+		"links.inserted_at",
+		"links.updated_at",
+	).
 		From("links").
 		Where("links.route = ?", route).
 		Where("links.active = ?", true)
@@ -39,6 +47,7 @@ func LookupRoute(db db.Queryable, route string) (*structs.Route, error) {
 		&routeRow.Active,
 		&routeRow.CreatedBy,
 		&routeRow.CreatedAt,
+		&routeRow.UpdatedAt,
 	)
 	if err != nil {
 		return nil, fmt.Errorf("error executing query: %w", err)

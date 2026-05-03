@@ -9,4 +9,5 @@ type Route struct {
 	CreatedBy   int       `json:"created_by"`
 	Active      bool      `json:"active"`
 	CreatedAt   time.Time `json:"created_at"`
+	UpdatedAt   time.Time `json:"updated_at"`
 }
