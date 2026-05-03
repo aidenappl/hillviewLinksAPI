@@ -8,7 +8,9 @@ import (
 )
 
 type RecordClickRequest struct {
-	LinkID *int
+	LinkID    *int
+	UserID    *int
+	IPAddress *string
 }
 
 func RecordClick(db db.Queryable, req RecordClickRequest) error {
@@ -17,14 +19,23 @@ func RecordClick(db db.Queryable, req RecordClickRequest) error {
 		return fmt.Errorf("missing linkID")
 	}
 
-	// update the link
-	query, args, err := sq.Insert(
-		"link_clicks",
-	).Columns(
-		"link_id",
-	).Values(
-		*req.LinkID,
-	).ToSql()
+	cols := []string{"link_id"}
+	vals := []interface{}{*req.LinkID}
+
+	if req.UserID != nil {
+		cols = append(cols, "user_id")
+		vals = append(vals, req.UserID)
+	}
+
+	if req.IPAddress != nil {
+		cols = append(cols, "ip_address")
+		vals = append(vals, req.IPAddress)
+	}
+
+	query, args, err := sq.Insert("link_clicks").
+		Columns(cols...).
+		Values(vals...).
+		ToSql()
 	if err != nil {
 		return fmt.Errorf("failed to build query: %w", err)
 	}

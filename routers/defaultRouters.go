@@ -1,7 +1,9 @@
 package routers
 
 import (
+	"net"
 	"net/http"
+	"strings"
 
 	"github.com/gorilla/mux"
 	"github.com/hillview.tv/linksAPI/db"
@@ -33,8 +35,10 @@ func CheckLinkRouteHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if recordClick == "true" {
+		ip := extractIP(r)
 		err := query.RecordClick(db.DB, query.RecordClickRequest{
-			LinkID: &routeFound.ID,
+			LinkID:    &routeFound.ID,
+			IPAddress: &ip,
 		})
 		if err != nil {
 			responder.ErrInternal(w, err, "failed to record click")
@@ -43,4 +47,15 @@ func CheckLinkRouteHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	responder.New(w, routeFound, "successfully found route")
+}
+
+func extractIP(r *http.Request) string {
+	if xff := r.Header.Get("X-Forwarded-For"); xff != "" {
+		return strings.TrimSpace(strings.SplitN(xff, ",", 2)[0])
+	}
+	host, _, err := net.SplitHostPort(r.RemoteAddr)
+	if err != nil {
+		return r.RemoteAddr
+	}
+	return host
 }
