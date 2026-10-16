@@ -12,6 +12,7 @@ import (
 	"github.com/hillview.tv/linksAPI/jwt"
 	"github.com/hillview.tv/linksAPI/query"
 	"github.com/hillview.tv/linksAPI/structs"
+	"github.com/hillview.tv/linksAPI/telemetry"
 )
 
 type contextKey struct {
@@ -156,6 +157,8 @@ func AccessTokenMiddleware(next http.Handler) http.Handler {
 			http.Error(w, "Invalid token", http.StatusUnauthorized)
 			return
 		}
+
+		telemetry.SetUserID(r.Context(), userID)
 
 		user, err := query.FindUser(db.DB, query.FindUserRequest{ID: &userID})
 		if err != nil {

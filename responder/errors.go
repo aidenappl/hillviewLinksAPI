@@ -2,6 +2,7 @@ package responder
 
 import (
 	"encoding/json"
+	"github.com/hillview.tv/linksAPI/telemetry"
 	"log"
 	"net/http"
 )
@@ -21,6 +22,12 @@ func SendError(w http.ResponseWriter, status int, errMessage string, err ...erro
 	if len(err) > 0 && err[0] != nil {
 		log.Printf("[ERROR DETAIL] %s: %v", errMessage, err[0])
 	}
+
+	var cause error
+	if len(err) > 0 {
+		cause = err[0]
+	}
+	telemetry.RecordFailureW(w, errMessage, cause)
 
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(status)
