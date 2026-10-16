@@ -10,6 +10,14 @@ var (
 	DatabaseDSN    = getEnvOrPanic("DATABASE_DSN")
 	JWTSigningKey  = getEnvOrPanic("JWT_SIGNING_KEY")
 	HealthCheckURL = getEnvOrPanic("HEALTH_CHECK_URL")
+
+	// Monitor (zone hillview). All optional: unset, the service runs without
+	// telemetry rather than failing to boot.
+	MonitorIngestURL = getEnv("MONITOR_INGEST_URL", "")
+	MonitorAPIKey    = getEnv("MONITOR_API_KEY", "")
+	MonitorEnv       = getEnv("MONITOR_ENV", "production")
+	MonitorSpoolDir  = getEnv("MONITOR_SPOOL_DIR", "")
+	MonitorStdout    = getEnv("MONITOR_STDOUT", "false") == "true"
 )
 
 func getEnv(key string, fallback string) string {

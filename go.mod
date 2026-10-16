@@ -3,6 +3,7 @@ module github.com/hillview.tv/linksAPI
 go 1.26.9
 
 require (
+	github.com/aidenappl/go-monitor v0.0.9
 	github.com/gorilla/handlers v1.5.2
 	github.com/gorilla/mux v1.8.1
 )
