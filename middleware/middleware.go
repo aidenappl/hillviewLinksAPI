@@ -125,7 +125,8 @@ func AccessTokenMiddleware(next http.Handler) http.Handler {
 			if strings.Contains(err.Error(), "token is expired") {
 				http.Error(w, "Token is expired", http.StatusUnauthorized)
 			} else {
-				http.Error(w, err.Error(), http.StatusUnauthorized)
+				telemetry.RecordFailureW(w, http.StatusText(http.StatusUnauthorized), err)
+				http.Error(w, http.StatusText(http.StatusUnauthorized), http.StatusUnauthorized)
 			}
 			return
 		}
@@ -134,7 +135,8 @@ func AccessTokenMiddleware(next http.Handler) http.Handler {
 
 		claimsValid, resp, err := jwt.ValidJWT(r.Context(), rawToken, claims, &jwt.HVJwtClaims{Type: jwt.AccessToken})
 		if err != nil {
-			http.Error(w, err.Error(), http.StatusUnauthorized)
+			telemetry.RecordFailureW(w, http.StatusText(http.StatusUnauthorized), err)
+			http.Error(w, http.StatusText(http.StatusUnauthorized), http.StatusUnauthorized)
 			return
 		}
 
